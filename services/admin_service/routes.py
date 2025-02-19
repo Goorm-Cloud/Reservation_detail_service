@@ -15,7 +15,6 @@ admin_bp = Blueprint('admin_bp', __name__)
 def login_route():
     return login()
 
-
 @login_bp.route('/role_check')
 def role_check_route():
     return role_check()

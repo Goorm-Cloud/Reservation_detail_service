@@ -4,9 +4,12 @@ from flask import Flask
 from authlib.integrations.flask_client import OAuth
 from services.admin_service.routes import admin_bp, login_bp
 from services.map_service.routes import map_bp
-# from services.reservation_service.routes import reservation_bp
-# from services.reservation_detail_service.routes import reservation_detail_bp
+from services.reservation_service.routes import parkinglot_bp
+from services.reservation_service.reservation_route import reservation_bp
+from services.common.models import db, migrate
 from flask_migrate import Migrate
+
+# from services.reservation_detail_service.routes import reservation_detail_bp
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
@@ -36,8 +39,6 @@ def create_app():
     app.config['TEMPLATES_AUTO_RELOAD'] = True
 
     # 📌 DB 설정
-    db = SQLAlchemy()
-    migrate = Migrate()
     db.init_app(app)
     migrate.init_app(app, db)
 
@@ -45,7 +46,9 @@ def create_app():
     app.register_blueprint(login_bp)
     app.register_blueprint(admin_bp, url_prefix=app.config['ADMIN_SERVICE_URL'])
     app.register_blueprint(map_bp, url_prefix=app.config['MAP_SERVICE_URL'])
-    # app.register_blueprint(reservation_bp, url_prefix=app.config['RESERVATION_SERVICE_URL'])
+    app.register_blueprint(reservation_bp, url_prefix=app.config['RESERVATION_SERVICE_URL'])
+    app.register_blueprint(parkinglot_bp)
+
     # app.register_blueprint(reservation_detail_bp, url_prefix=app.config['RESERVATION_DETAIL_SERVICE_URL'])
 
     return app

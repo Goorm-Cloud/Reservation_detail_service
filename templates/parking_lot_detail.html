@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ parking_lot.parkinglot_name }} 상세 정보</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mt-3">{{ parking_lot.parkinglot_name }} 상세 정보</h2>
+
+        <ul class="list-group mt-3">
+            <li class="list-group-item"><strong>이름:</strong> {{ parking_lot.parkinglot_name }}</li>
+            <li class="list-group-item"><strong>위치:</strong> {{ parking_lot.parkinglot_add }}</li>
+            <li class="list-group-item"><strong>주차장 종류:</strong> {{ parking_lot.parkinglot_type }}</li>
+            <li class="list-group-item"><strong>운영 여부:</strong> {% if parking_lot.parkinglot_cost %} 유료 {% else %} 무료 {% endif %}</li>
+        </ul>
+
+        <!-- 예약하기 버튼 -->
+        <div class="text-center mt-3">
+            <a href="{{ url_for('reservation_bp.reserve_parking', parkinglot_id=parking_lot.parkinglot_id) }}" class="btn btn-primary">예약하기</a>
+        </div>
+
+        <div class="text-center mt-3">
+            <a href="{{ url_for('parkinglot_bp.parking_lots') }}" class="btn btn-secondary">목록으로 돌아가기</a>
+        </div>
+    </div>
+</body>
+</html>

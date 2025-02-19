@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ parking_lot.parkinglot_name }} 예약</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mt-3">{{ parking_lot.parkinglot_name }} 예약하기</h2>
+
+        <ul class="list-group mt-3">
+            <li class="list-group-item"><strong>이름:</strong> {{ parking_lot.parkinglot_name }}</li>
+            <li class="list-group-item"><strong>위치:</strong> {{ parking_lot.parkinglot_add }}</li>
+        </ul>
+
+        <!-- Flash 메시지 표시 -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} mt-3">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- 예약 폼 -->
+        <form method="POST" action="{{ url_for('reservation_bp.reserve_parking', parkinglot_id=parking_lot.parkinglot_id) }}">
+            <div class="mb-3">
+                <label for="email" class="form-label">이메일</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">예약 완료</button>
+        </form>
+
+        <!-- 뒤로가기 버튼 -->
+        <div class="text-center mt-3">
+            <a href="{{ url_for('parkinglot_bp.parking_lots') }}" class="btn btn-secondary">목록으로 돌아가기</a>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='bootstrap/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>

@@ -1,26 +1,25 @@
 import os
 
 from flask import Flask
-from authlib.integrations.flask_client import OAuth
+from services.common.models import db, migrate
+from services.common.oauth import oauth
+
 from services.admin_service.routes import admin_bp, login_bp
 from services.map_service.routes import map_bp
 from services.reservation_service.routes import parkinglot_bp
 from services.reservation_service.reservation_route import reservation_bp
-from services.common.models import db, migrate
-from flask_migrate import Migrate
-
 # from services.reservation_detail_service.routes import reservation_detail_bp
-from flask_sqlalchemy import SQLAlchemy
-from dotenv import load_dotenv
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
-   # load_dotenv(ENV_PATH)
+    app.secret_key = os.urandom(24)
+
+
 
     # 📌 OAuth 설정
-    oauth = OAuth(app)
+    oauth.init_app(app)
     app.config['CLIENT_SECRET'] = os.getenv("CLIENT_SECRET")
     oauth.register(
         name='oidc',
@@ -45,7 +44,9 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    #  📌 블루프린트 등록
+
+
+    # 📌 블루프린트 등록
     app.register_blueprint(login_bp)
     app.register_blueprint(admin_bp, url_prefix=app.config['ADMIN_SERVICE_URL'])
     app.register_blueprint(map_bp, url_prefix=app.config['MAP_SERVICE_URL'])

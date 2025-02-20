@@ -49,7 +49,7 @@ def create_app():
     app.register_blueprint(admin_bp, url_prefix=app.config['ADMIN_SERVICE_URL'])
     app.register_blueprint(map_bp, url_prefix=app.config['MAP_SERVICE_URL'])
     app.register_blueprint(reservation_bp, url_prefix=app.config['RESERVATION_SERVICE_URL'])
-    app.register_blueprint(parkinglot_bp)
-    # app.register_blueprint(reservation_detail_bp, url_prefix=app.config['RESERVATION_DETAIL_SERVICE_URL'])
+    app.register_blueprint(parkinglot_bp, url_prefix=app.config['PARKINGLOT_SERVICE_URL'])
+    # app.register_blueprint(reservation_detail_bp, url_prefix=app.config['cRESERVATION_DETAIL_SERVICE_URL'])
 
     return app

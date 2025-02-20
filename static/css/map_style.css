@@ -127,7 +127,7 @@ body {
     cursor: pointer;
 }
 
-#reserve-button {
+#detail-button {
     display: block;
     width: 100%;
     padding: 10px;
@@ -142,7 +142,7 @@ body {
     text-decoration: none;
 }
 
-#reserve-button:hover {
+#detail-button:hover {
     background: #0056b3;
 }
 

@@ -15,12 +15,14 @@
         <h2>❌ 예약 삭제</h2>
         <p>정말로 아래 예약을 삭제하시겠습니까?</p>
         <ul class="list-group">
-            <li class="list-group-item"><strong>사용자:</strong> {{ reservation.name }}</li>
-            <li class="list-group-item"><strong>차량 번호:</strong> {{ reservation.car_number }}</li>
-            <li class="list-group-item"><strong>날짜:</strong> {{ reservation.date }}</li>
-            <li class="list-group-item"><strong>시간:</strong> {{ reservation.time }}</li>
+            <li class="list-group-item"><strong>예약 ID:</strong> {{ reservation.reservation_id }}</li>
+            <li class="list-group-item"><strong>사용자 ID:</strong> {{ reservation.user_id }}</li>
+            <li class="list-group-item"><strong>주차장 ID:</strong> {{ reservation.parkinglot_id }}</li>
+            <li class="list-group-item"><strong>예약 상태:</strong> {{ reservation.reservation_status }}</li>
+            <li class="list-group-item"><strong>예약 날짜:</strong> {{ reservation.modified_at.strftime('%Y년 %m월 %d일') }}</li>
+            <li class="list-group-item"><strong>예약 시간:</strong> {{ reservation.modified_at.strftime('%H시 %M분 %S초') }}</li>
         </ul>
-        <form action="{{ url_for('admin_bp.delete_reservation_route', reservation_id=reservation.id) }}" method="POST">
+        <form action="{{ url_for('admin_bp.delete_reservation_route', reservation_id=reservation.reservation_id) }}" method="POST">
             <button type="submit" class="btn btn-danger mt-3">삭제</button>
             <a href="{{ url_for('admin_bp.admin_dashboard_route') }}" class="btn btn-secondary mt-3">취소</a>
         </form>

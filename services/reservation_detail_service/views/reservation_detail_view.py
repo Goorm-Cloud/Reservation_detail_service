@@ -11,7 +11,7 @@ def detail(reservation_id):
     user = User.query.get_or_404(reservation.user_id)
     parkingLot = ParkingLot.query.get_or_404(reservation.parkinglot_id)
     
-    return render_template('reservation_detail.html', reservation=reservation, user=user,
+    return render_template('admin_reservation_detail.html', reservation=reservation, user=user,
             parkingLot=parkingLot)
 
 @bp.route('/detail/<int:reservation_id>', methods=['POST'])

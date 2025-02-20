@@ -19,11 +19,11 @@
 
         <!-- 예약하기 버튼 -->
         <div class="text-center mt-3">
-            <a href="{{ url_for('reservation_bp.reserve_parking', parkinglot_id=parking_lot.parkinglot_id) }}" class="btn btn-primary">예약하기</a>
+            <a href="{{ url_for('reservation_bp.reserve_parking_route', parkinglot_id=parking_lot.parkinglot_id) }}" class="btn btn-primary">예약하기</a>
         </div>
 
         <div class="text-center mt-3">
-            <a href="{{ url_for('parkinglot_bp.parking_lots') }}" class="btn btn-secondary">목록으로 돌아가기</a>
+            <a href="{{ url_for('parkinglot_bp.parking_lots_route') }}" class="btn btn-secondary">목록으로 돌아가기</a>
         </div>
     </div>
 </body>

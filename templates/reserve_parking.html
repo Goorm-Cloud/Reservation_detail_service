@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ parking_lot.parkinglot_name }} 예약</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     <div class="container">
@@ -19,27 +20,30 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} mt-3">{{ message }}</div>
+                    <div class="alert alert-{{ category }} alert-dismissible fade show mt-3" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
         <!-- 예약 폼 -->
-        <form method="POST" action="{{ url_for('reservation_bp.reserve_parking', parkinglot_id=parking_lot.parkinglot_id) }}">
+        <form method="POST" action="{{ url_for('reservation_bp.reserve_parking_route', parkinglot_id=parking_lot.parkinglot_id) }}" class="mt-3">
             <div class="mb-3">
                 <label for="email" class="form-label">이메일</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="example@example.com" required>
             </div>
 
             <button type="submit" class="btn btn-primary w-100">예약 완료</button>
         </form>
 
         <!-- 뒤로가기 버튼 -->
-        <div class="text-center mt-3">
-            <a href="{{ url_for('parkinglot_bp.parking_lots') }}" class="btn btn-secondary">목록으로 돌아가기</a>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('parkinglot_bp.parking_lots_route') }}" class="btn btn-outline-secondary">목록으로 돌아가기</a>
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='bootstrap/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>

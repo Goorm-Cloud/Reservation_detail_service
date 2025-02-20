@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}">
 </head>
 <body>
+    <!-- 🚀 네비게이션 바 포함 -->
+    {% include "navbar.html" %}
+
     <div class="container">
         <h2 class="text-center mt-3">{{ parking_lot.parkinglot_name }} 상세 정보</h2>
 
@@ -23,7 +26,7 @@
         </div>
 
         <div class="text-center mt-3">
-            <a href="{{ url_for('parkinglot_bp.parking_lots_route') }}" class="btn btn-secondary">목록으로 돌아가기</a>
+            <a href="{{ url_for('map_bp.index') }}" class="btn btn-secondary">목록으로 돌아가기</a>
         </div>
     </div>
 </body>

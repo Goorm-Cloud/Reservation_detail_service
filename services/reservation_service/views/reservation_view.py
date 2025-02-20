@@ -1,6 +1,18 @@
-from flask import render_template, request, jsonify, redirect, url_for, flash
+import os
+import json
+from flask import render_template, request, Response, send_from_directory, jsonify
 from services.common.models import db, Reservation, ParkingLot, User
 from datetime import datetime
+from services.reservation_service.reservation_form import ReservationForm
+
+
+# 📌 정적 파일 제공
+def static_files(filename):
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    STATIC_DIR = os.path.join(BASE_DIR, "reservation_service", "static")
+    return send_from_directory(STATIC_DIR, filename)
+
+# 📌 주차장 예약 처리
 
 def reserve_parking(parkinglot_id):
     """
@@ -13,10 +25,12 @@ def reserve_parking(parkinglot_id):
     ).filter_by(parkinglot_id=parkinglot_id).first()
 
     if not parking_lot:
-        return "주차장을 찾을 수 없습니다.", 404
+        return jsonify({"success": False, "message": "❌ 주차장을 찾을 수 없습니다."}), 404
 
-    if request.method == 'POST':
-        email = request.form.get("email")  # 사용자 이메일 입력 받기
+    form = ReservationForm()
+
+    if form.validate_on_submit():  # ✅ FlaskForm 검증 추가
+        email = form.email.data  # FlaskForm에서 입력 데이터 가져오기
 
         # 🚀 이메일로 사용자 조회
         user = db.session.query(User).filter_by(email=email).first()
@@ -28,8 +42,7 @@ def reserve_parking(parkinglot_id):
         new_reservation = Reservation(
             user_id=user.user_id,
             parkinglot_id=parkinglot_id,
-            reservation_status=True,
-            modified_type="confirm",
+            reservation_status="confirm",
             modified_at=datetime.utcnow(),
             modified_by=str(user.user_id)
         )
@@ -39,4 +52,4 @@ def reserve_parking(parkinglot_id):
 
         return jsonify({"success": True, "message": "✅ 예약이 완료되었습니다!"})
 
-    return render_template('reserve_parking.html', parking_lot=parking_lot)
+    return render_template('reserve_parking.html', parking_lot=parking_lot, form=form)

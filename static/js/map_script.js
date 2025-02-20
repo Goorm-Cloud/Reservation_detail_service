@@ -195,9 +195,8 @@ function showToggle(lot) {
   document.getElementById("toggle-hours").innerText =
     "운영시간: " + (lot.hours || "정보 없음");
 
-  // 🚀 예약 페이지로 이동하는 링크 설정 (현재는 '#' 링크, 나중에 수정 가능)
-  document.getElementById("reserve-button").href =
-    "/reserve?parking_id=" + lot.id;
+  // ✅ 상세보기 버튼 링크 업데이트
+    document.getElementById("detail-button").href = `/parking-lot/${lot.id}`;
 
   document.getElementById("toggle-container").style.bottom = "0px"; // 화면 위로 슬라이드업
 }

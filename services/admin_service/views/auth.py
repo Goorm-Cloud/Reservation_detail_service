@@ -1,10 +1,10 @@
 from flask import render_template, redirect, url_for, session
 from services.common.oauth import oauth
 from flask import current_app
+import os
 
 def login():
-    return oauth.oidc.authorize_redirect(current_app.config['AUTHORIZE_REDIRECT_URL'])
-
+    return oauth.oidc.authorize_redirect(os.getenv("AUTHORIZE_REDIRECT_URL"))
 
 def logout():
     session.pop('user', None)

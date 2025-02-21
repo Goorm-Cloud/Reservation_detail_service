@@ -20,12 +20,11 @@ def create_app():
 
     # 📌 OAuth 설정
     oauth.init_app(app)
-    app.config['CLIENT_SECRET'] = os.getenv("CLIENT_SECRET")
     oauth.register(
         name='oidc',
         authority='https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_HroMsatHG',
         client_id='77g5eu474omofv1t6ss848gn9u',
-        client_secret= app.config['CLIENT_SECRET'],
+        client_secret= os.getenv("CLIENT_SECRET"),
         server_metadata_url='https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_HroMsatHG/.well-known/openid-configuration',
         client_kwargs={'scope': 'phone openid email'}
     )
@@ -33,8 +32,7 @@ def create_app():
 
 
     # 📌 KAKAO API KEY 로드
-    app.config['KAKAO_API_KEY'] = os.getenv("KAKAO_API_KEY")
-    if not app.config['KAKAO_API_KEY']:
+    if not os.getenv("KAKAO_API_KEY"):
         raise ValueError("❌ KAKAO_API_KEY가 설정되지 않았습니다! .env 파일을 확인하세요.")
     app.config['TEMPLATES_AUTO_RELOAD'] = True
 

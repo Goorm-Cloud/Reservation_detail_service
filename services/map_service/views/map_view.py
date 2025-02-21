@@ -52,7 +52,7 @@ def load_parking_data():
 # 📌 홈 페이지 렌더링
 def home_view():
     print("✅ home_view호출")
-    kakao_api_key = current_app.config['KAKAO_API_KEY']
+    kakao_api_key = os.getenv("KAKAO_API_KEY")
     return render_template("index.html", kakao_api_key=kakao_api_key)
 
 # 📌 정적 파일 제공

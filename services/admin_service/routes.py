@@ -2,7 +2,7 @@ from flask import Blueprint
 from .views.auth import login, role_check, authorize, logout
 from .views.admin_list import admin_dashboard
 from .views.reservation import add_reservation, edit_reservation, delete_reservation, reservation_detail
-from .views.parkinglot import edit_parkinglot
+from .views.parkinglot import edit_parkinglot, admin_parkinglot
 
 
 # bp 생성
@@ -29,7 +29,7 @@ def logout_route():
 
 
 
-# 관리자 관련 라우트
+# 관리자 관련 라우트 - 예약 정보
 @admin_bp.route('/')
 def admin_dashboard_route():
     return admin_dashboard()
@@ -52,6 +52,12 @@ def reservation_detail_route(reservation_id):
     return reservation_detail(reservation_id)
 
 
+
+# 관리자 관련 라우트 - 주차장 정보
 @admin_bp.route('/parkinglot/edit/<int:parkinglot_id>', methods=['GET', 'POST'])
 def edit_parkinglot_route(parkinglot_id):
     return edit_parkinglot(parkinglot_id)
+
+@admin_bp.route('/parkinglot')
+def admin_parkinglot_route():
+    return admin_parkinglot()

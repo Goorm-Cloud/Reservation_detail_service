@@ -9,29 +9,52 @@
     <title>예약 수정</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body>
-    <div class="container mt-5">
-        <h2>✏️ 예약 수정</h2>
-        <form action="{{ url_for('admin_bp.edit_reservation_route', reservation_id=reservation.id) }}" method="POST">
-            <div class="mb-3">
-                <label for="name" class="form-label">사용자 이름</label>
-                <input type="text" class="form-control" id="name" name="name" value="{{ reservation.name }}" required>
-            </div>
-            <div class="mb-3">
-                <label for="car_number" class="form-label">차량 번호</label>
-                <input type="text" class="form-control" id="car_number" name="car_number" value="{{ reservation.car_number }}" required>
-            </div>
-            <div class="mb-3">
-                <label for="date" class="form-label">날짜</label>
-                <input type="date" class="form-control" id="date" name="date" value="{{ reservation.date }}" required>
-            </div>
-            <div class="mb-3">
-                <label for="time" class="form-label">시간</label>
-                <input type="time" class="form-control" id="time" name="time" value="{{ reservation.time }}" required>
-            </div>
-            <button type="submit" class="btn btn-success">수정 완료</button>
-            <a href="{{ url_for('admin_bp.admin_dashboard_route') }}" class="btn btn-secondary">취소</a>
-        </form>
+
+<h2 class="text-center mb-4">🚗 예약 수정하기</h2>
+
+<form method="POST" action="{{ url_for('admin_bp.edit_reservation_route', reservation_id=reservation.reservation_id) }}">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>예약 ID</th>
+                    <th>사용자 ID</th>
+                    <th>주차장 ID</th>
+                    <th>예약 상태</th>
+                    <th>예약 날짜</th>
+                    <th>예약 시간</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ reservation.reservation_id }}</td>
+                    <td>
+                        <input type="text" name="user_id" value="{{ reservation.user_id }}" class="form-control" required>
+                    </td>
+                    <td>
+                        <input type="text" name="parkinglot_id" value="{{ reservation.parkinglot_id }}" class="form-control" required>
+                    </td>
+                    <td>
+                        <select name="reservation_status" class="form-control">
+                            <option value="confirm" {% if reservation.reservation_status == 'confirm' %}selected{% endif %}>확정</option>
+                            <option value="pending" {% if reservation.reservation_status == 'pending' %}selected{% endif %}>대기</option>
+                            <option value="cancel" {% if reservation.reservation_status == 'cancel' %}selected{% endif %}>취소</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="date" name="modified_at" value="{{ reservation.modified_at.strftime('%Y-%m-%d') }}" class="form-control" required>
+                    </td>
+                    <td>
+                        <input type="time" name="reservation_time" value="{{ reservation.modified_at.strftime('%H:%M') }}" class="form-control" required>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-</body>
+
+    <div class="text-center mt-4">
+        <button type="submit" class="btn btn-primary">수정 완료</button>
+        <a href="{{ url_for('admin_bp.admin_dashboard_route') }}" class="btn btn-secondary">취소</a>
+    </div>
+</form>
 {% endblock %}

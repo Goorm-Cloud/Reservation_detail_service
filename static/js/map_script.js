@@ -195,8 +195,15 @@ function showToggle(lot) {
   document.getElementById("toggle-hours").innerText =
     "운영시간: " + (lot.hours || "정보 없음");
 
-  // ✅ 상세보기 버튼 링크 업데이트
+  // 🚀 예약 페이지로 이동하는 링크 설정 (현재는 '#' 링크, 나중에 수정 가능)
+  if (document.getElementById("detail-button")) {
     document.getElementById("detail-button").href = `/parking-lot/${lot.id}`;
+  }
+
+  if (document.getElementById("edit-button")) {
+    document.getElementById("edit-button").href =
+      "/admin/parkinglot/edit/" + lot.id;
+  }
 
   document.getElementById("toggle-container").style.bottom = "0px"; // 화면 위로 슬라이드업
 }

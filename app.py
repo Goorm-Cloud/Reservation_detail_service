@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, url_for
 from services.common.models import db, migrate
 from services.common.oauth import oauth
 
@@ -44,12 +44,20 @@ def create_app():
 
 
 
+
+    @app.route("/")
+    def index():
+        from flask import redirect
+        return redirect(url_for("map_bp.index"))  # /map으로 리디렉트
+
     # 📌 블루프린트 등록
     app.register_blueprint(login_bp)
     app.register_blueprint(admin_bp, url_prefix=app.config['ADMIN_SERVICE_URL'])
     app.register_blueprint(map_bp, url_prefix=app.config['MAP_SERVICE_URL'])
     app.register_blueprint(reservation_bp, url_prefix=app.config['RESERVATION_SERVICE_URL'])
     app.register_blueprint(parkinglot_bp, url_prefix=app.config['PARKINGLOT_SERVICE_URL'])
-    # app.register_blueprint(reservation_detail_bp, url_prefix=app.config['cRESERVATION_DETAIL_SERVICE_URL'])
+    # app.register_blueprint(reservation_detail_bp, url_prefix=app.config['RESERVATION_DETAIL_SERVICE_URL'])
+
+
 
     return app

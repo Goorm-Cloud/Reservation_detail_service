@@ -1,3 +1,7 @@
+MA => MSA 전환 계획
+
+MA 폴더 구조
+```
 Zoochacha_monolithic/
 │── services/   # 서비스 패키지
 │   │── admin_service/               # 1- 관리자 서비스
@@ -28,3 +32,4 @@ Zoochacha_monolithic/
 │── app.py      # Flask 애플리케이션 실행 엔트리 포인트
 │── config.py   # 애플리케이션 설정 파일
 │── run.py      # 앱 실행을 위한 별도 스크립트
+```

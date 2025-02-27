@@ -22,7 +22,7 @@
 
         <!-- 예약하기 & 다른 주차장 정보 버튼 -->
         <div class="d-flex justify-content-center gap-2 mt-3">
-            <a href="{{ url_for('reservation_bp.reserve_parking_route', parkinglot_id=parking_lot.parkinglot_id) }}" class="btn btn-primary">예약하기</a>
+           <a href="{{ url_for('reservation_bp.reserve_parking_route', parkinglot_id=parking_lot.parkinglot_id) }}" class="btn btn-primary">예약하기</a>
             <a href="{{ url_for('parkinglot_bp.parking_lots_route', parkinglot_id=parking_lot.parkinglot_id) }}" class="btn btn-danger">다른 주차장 정보</a>
         </div>
 

@@ -8,7 +8,7 @@ from services.admin_service.routes import admin_bp, login_bp
 from services.map_service.routes import map_bp
 from services.reservation_service.routes import parkinglot_bp
 from services.reservation_service.reservation_route import reservation_bp
-# from services.reservation_detail_service.routes import reservation_detail_bp
+from services.reservation_detail_service.routes import reservation_detail_bp
 
 
 def create_app():
@@ -56,8 +56,7 @@ def create_app():
     app.register_blueprint(map_bp, url_prefix=app.config['MAP_SERVICE_URL'])
     app.register_blueprint(reservation_bp, url_prefix=app.config['RESERVATION_SERVICE_URL'])
     app.register_blueprint(parkinglot_bp, url_prefix=app.config['PARKINGLOT_SERVICE_URL'])
-    # app.register_blueprint(reservation_detail_bp, url_prefix=app.config['RESERVATION_DETAIL_SERVICE_URL'])
-
+    app.register_blueprint(reservation_detail_bp, url_prefix=app.config['RESERVATION_DETAIL_SERVICE_URL'])
 
 
     return app

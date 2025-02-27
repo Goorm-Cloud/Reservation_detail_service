@@ -1,6 +1,6 @@
 import os
 import json
-from flask import render_template, request, Response, send_from_directory, jsonify
+from flask import url_for, render_template, redirect, request, Response, send_from_directory, jsonify
 from services.common.models import db, Reservation, ParkingLot, User
 from datetime import datetime
 from services.reservation_service.reservation_form import ReservationForm
@@ -43,13 +43,20 @@ def reserve_parking(parkinglot_id):
             user_id=user.user_id,
             parkinglot_id=parkinglot_id,
             reservation_status="confirm",
-            modified_at=datetime.utcnow(),
-            modified_by=str(user.user_id)
+            modified_at=datetime.utcnow().isoformat(),
+            modified_by=str(user.name)
         )
 
         db.session.add(new_reservation)
         db.session.commit()
 
-        return jsonify({"success": True, "message": "✅ 예약이 완료되었습니다!"})
+        reservation = db.session.query(Reservation).filter_by(user_id=user.user_id).first()
+        print(f"Reservation: {reservation}")
+
+        print(new_reservation.reservation_id)
+        return redirect(url_for('reservation_detail_bp.detail', reservation_id=new_reservation.reservation_id))
+
+
+        # return jsonify({"success": True, "message": "✅ 예약이 완료되었습니다!"})
 
     return render_template('reserve_parking.html', parking_lot=parking_lot, form=form)

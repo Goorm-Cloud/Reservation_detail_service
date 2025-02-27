@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from services.common.models import db, migrate
-from services.common import config
+from services.reservation_detail_service.views import reservation_detail_view
+import config
 
 def create_app():
     app = Flask(__name__, template_folder="services/reservation_detail_service/templates")
@@ -12,9 +13,7 @@ def create_app():
         migrate.init_app(app, db, render_as_batch=True)
     else:
         migrate.init_app(app, db)
-    # from services.common import models
-    
-    from services.reservation_detail_service.views import reservation_detail_view
+            
 
     app.register_blueprint(reservation_detail_view.bp)
 

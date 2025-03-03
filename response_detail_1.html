@@ -1,16 +1,86 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예약 정보 상세보기</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
-{% block title %}예약 정보 상세보기{% endblock %}
+    <style>
+        /* 페이지 전체 높이 100% */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
 
-{% block content %}
+        /* body에 Flexbox 적용 */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+        }
+
+        /* 페이지 내용이 적어도 푸터가 맨 아래로 오도록 설정 */
+        .content {
+            flex: 1;
+        }
+
+        /* 푸터 스타일 */
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 바 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">🚗 Zoochacha</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin">예약관리</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/parkinglot">주차장관리</a>
+                    </li>
+                    <!-- 로그인/로그아웃 버튼 -->
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">로그인</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 페이지 내용 -->
+    <div class="container mt-5 content">
+        
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zoochacha - 예약 상세 정보</title>
-    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey={{ kakao_api_key }}&libraries=services"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/map_style.css') }}">
+    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=&libraries=services"></script>
+    <link rel="stylesheet" href="/static/css/map_style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ url_for('static', filename='js/map_script.js') }}" defer></script>
+    <script src="/static/js/map_script.js" defer></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -235,24 +305,24 @@
     <h4 class="section-header"><i class="fas fa-user info-icon"></i>사용자 정보</h4>
     <table class="table table-bordered table-hover bg-white mb-4">
         <tbody>
-            {% if user.name %}
+            
             <tr class="user-info">
                 <td width="30%"><strong><i class="fas fa-id-card info-icon"></i>이름</strong></td>
-                <td>{{ user.name }}</td>
+                <td>홍하은</td>
             </tr>
-            {% endif %}
-            {% if user.email %}
+            
+            
             <tr class="user-info">
                 <td><strong><i class="fas fa-envelope info-icon"></i>이메일</strong></td>
-                <td>{{ user.email }}</td>
+                <td>78qmz4gt@daum.net</td>
             </tr>
-            {% endif %}
-            {% if user.phone %}
+            
+            
             <tr class="user-info">
                 <td><strong><i class="fas fa-phone info-icon"></i>연락처</strong></td>
-                <td>{{ user.phone }}</td>
+                <td>010-5005-3155</td>
             </tr>
-            {% endif %}
+            
         </tbody>
     </table>
     
@@ -260,64 +330,35 @@
     <h4 class="section-header"><i class="fas fa-parking info-icon"></i>주차장 정보</h4>
     <table class="table table-bordered table-hover bg-white mb-4">
         <tbody>
-            {% if parkinglot.parkinglot_name %}
+            
             <tr class="parkinglot-info">
                 <td width="30%"><strong><i class="fas fa-sign info-icon"></i>주차장 이름</strong></td>
-                <td>{{ parkinglot.parkinglot_name }}</td>
+                <td>막구직</td>
             </tr>
-            {% endif %}
-            {% if parkinglot.parkinglot_add %}
+            
+            
             <tr class="parkinglot-info">
                 <td><strong><i class="fas fa-map-marker-alt info-icon"></i>주소</strong></td>
-                <td>{{ parkinglot.parkinglot_add }}</td>
+                <td>울산광역시 동구 일산동 901</td>
             </tr>
-            {% endif %}
-            {% if parkinglot.parkinglot_type %}
+            
+            
             <tr class="parkinglot-info">
                 <td><strong><i class="fas fa-car info-icon"></i>주차장 유형</strong></td>
                 <td>
-                    {% if parkinglot.parkinglot_type == 'indoor' %}
+                    
                         실내 주차장
-                    {% elif parkinglot.parkinglot_type == 'outdoor' %}
-                        노외 주차장
-                    {% elif parkinglot.parkinglot_type == 'attached' %}
-                        부설 주차장
-                    {% else %}
-                        {{ parkinglot.parkinglot_type }}
-                    {% endif %}
+                    
                 </td>
             </tr>
-            {% endif %}
-            {% if parkinglot.parkinglot_day %}
-            <tr class="parkinglot-info">
-                <td><strong><i class="fas fa-calendar-day info-icon"></i>운영 요일</strong></td>
-                <td>
-                    {% if parkinglot.parkinglot_day == 'mon' %}
-                        월요일
-                    {% elif parkinglot.parkinglot_day == 'tue' %}
-                        화요일
-                    {% elif parkinglot.parkinglot_day == 'wed' %}
-                        수요일
-                    {% elif parkinglot.parkinglot_day == 'thu' %}
-                        목요일
-                    {% elif parkinglot.parkinglot_day == 'fri' %}
-                        금요일
-                    {% elif parkinglot.parkinglot_day == 'sat' %}
-                        토요일
-                    {% elif parkinglot.parkinglot_day == 'sun' %}
-                        일요일
-                    {% else %}
-                        {{ parkinglot.parkinglot_day }}
-                    {% endif %}
-                </td>
-            </tr>
-            {% endif %}
-            {% if parkinglot.parkinglot_time %}
+            
+            
+            
             <tr class="parkinglot-info">
                 <td><strong><i class="fas fa-clock info-icon"></i>운영 시간</strong></td>
-                <td>{{ parkinglot.parkinglot_time }}</td>
+                <td>00:00:00</td>
             </tr>
-            {% endif %}
+            
         </tbody>
     </table>
     
@@ -325,52 +366,42 @@
     <h4 class="section-header"><i class="fas fa-calendar-check info-icon"></i>예약 정보</h4>
     <table class="table table-bordered table-hover bg-white mb-4">
         <tbody>
-            {% if reservation.reservation_status %}
+            
             <tr class="reservation-info">
                 <td width="30%"><strong><i class="fas fa-info-circle info-icon"></i>예약 상태</strong></td>
                 <td>
-                    {% if reservation.reservation_status == 'confirm' %}
-                        <span class="status-badge status-confirm">
-                            <i class="fas fa-check-circle"></i> 확정
-                        </span>
-                    {% elif reservation.reservation_status == 'none' %}
-                        <span class="status-badge status-none">
-                            <i class="fas fa-clock"></i> 대기중
-                        </span>
-                    {% elif reservation.reservation_status == 'cancel' %}
+                    
                         <span class="status-badge status-cancel">
                             <i class="fas fa-times-circle"></i> 취소됨
                         </span>
-                    {% else %}
-                        {{ reservation.reservation_status }}
-                    {% endif %}
+                    
                 </td>
             </tr>
-            {% endif %}
-            {% if reservation.created_at %}
+            
+            
             <tr class="reservation-info">
                 <td><strong><i class="fas fa-calendar-plus info-icon"></i>생성 일시</strong></td>
-                <td>{{ reservation.created_at.strftime('%Y년 %m월 %d일 %H시 %M분') }}</td>
+                <td>2023년 06월 24일 03시 50분</td>
             </tr>
-            {% endif %}
-            {% if reservation.modified_at %}
+            
+            
             <tr class="reservation-info">
                 <td><strong><i class="fas fa-edit info-icon"></i>수정 일시</strong></td>
-                <td>{{ reservation.modified_at.strftime('%Y년 %m월 %d일 %H시 %M분') }}</td>
+                <td>2025년 03월 03일 01시 45분</td>
             </tr>
-            {% endif %}
-            {% if reservation.created_by %}
+            
+            
             <tr class="reservation-info">
                 <td><strong><i class="fas fa-user-plus info-icon"></i>생성자</strong></td>
-                <td>{{ reservation.created_by }}</td>
+                <td>홍하은</td>
             </tr>
-            {% endif %}
-            {% if reservation.modified_by %}
+            
+            
             <tr class="reservation-info">
                 <td><strong><i class="fas fa-user-edit info-icon"></i>수정자</strong></td>
-                <td>{{ reservation.modified_by }}</td>
+                <td>시스템(삭제)</td>
             </tr>
-            {% endif %}
+            
         </tbody>
     </table>
 
@@ -381,15 +412,11 @@
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editReservationModal">
             <i class="fas fa-edit"></i> 예약 수정
         </button>
-        {% if reservation.reservation_status == 'cancel' %}
-        <button onclick="confirmReactivation('{{ reservation.reservation_id }}')" class="btn btn-success">
+        
+        <button onclick="confirmReactivation('1')" class="btn btn-success">
             <i class="fas fa-redo"></i> 재예약
         </button>
-        {% else %}
-        <button onclick="confirmDeletion('{{ reservation.reservation_id }}')" class="btn btn-danger">
-            <i class="fas fa-times-circle"></i> 예약 취소
-        </button>
-        {% endif %}
+        
     </div>
 </div>
 
@@ -406,51 +433,51 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-8">
-                        <form id="editReservationForm" action="{{ url_for('reservation_detail_bp.modify', reservation_id=reservation.reservation_id) }}" method="POST">
+                        <form id="editReservationForm" action="/reservation-detail/1" method="POST">
                             <!-- CSRF 토큰 제거 -->
                             
                             <!-- 예약 상태 (숨김 필드로 변경) -->
-                            <input type="hidden" name="reservation_status" value="{{ reservation.reservation_status }}">
+                            <input type="hidden" name="reservation_status" value="cancel">
                             
                             <div class="mb-3">
                                 <label for="reservation_status_display" class="form-label">
                                     <i class="fas fa-info-circle"></i> 예약 상태 (수정 불가)
                                 </label>
                                 <select class="form-select" id="reservation_status_display" disabled>
-                                    <option value="confirm" {% if reservation.reservation_status == 'confirm' %}selected{% endif %}>
+                                    <option value="confirm" >
                                         ✅ 확정
                                     </option>
-                                    <option value="none" {% if reservation.reservation_status == 'none' %}selected{% endif %}>
+                                    <option value="none" >
                                         ⏱️ 대기
                                     </option>
-                                    <option value="cancel" {% if reservation.reservation_status == 'cancel' %}selected{% endif %}>
+                                    <option value="cancel" selected>
                                         ❌ 취소
                                     </option>
                                 </select>
                             </div>
                             
                             <!-- 사용자 이름 (숨김 필드로 변경) -->
-                            <input type="hidden" name="user_name" value="{{ user.name }}">
+                            <input type="hidden" name="user_name" value="홍하은">
                             
                             <div class="mb-3">
                                 <label for="user_name_display" class="form-label">
                                     <i class="fas fa-user"></i> 사용자 이름 (수정 불가)
                                 </label>
-                                <input type="text" class="form-control" id="user_name_display" value="{{ user.name }}" disabled>
+                                <input type="text" class="form-control" id="user_name_display" value="홍하은" disabled>
                             </div>
                             
                             <div class="mb-3">
                                 <label for="user_email" class="form-label">
                                     <i class="fas fa-envelope"></i> 이메일
                                 </label>
-                                <input type="email" class="form-control" id="user_email" name="user_email" value="{{ user.email }}">
+                                <input type="email" class="form-control" id="user_email" name="user_email" value="78qmz4gt@daum.net">
                             </div>
                             
                             <div class="mb-3">
                                 <label for="user_phone" class="form-label">
                                     <i class="fas fa-phone"></i> 연락처
                                 </label>
-                                <input type="text" class="form-control" id="user_phone" name="user_phone" value="{{ user.phone }}">
+                                <input type="text" class="form-control" id="user_phone" name="user_phone" value="010-5005-3155">
                             </div>
 
                             <!-- 수정자와 수정 시간은 숨김 처리 -->
@@ -488,13 +515,13 @@
                                 <p class="card-text">
                                     <small>
                                         <i class="fas fa-parking text-primary"></i>
-                                        <strong>주차장:</strong> {{ parkinglot.parkinglot_name }}
+                                        <strong>주차장:</strong> 막구직
                                     </small>
                                 </p>
                                 <p class="card-text">
                                     <small>
                                         <i class="fas fa-map-marker-alt text-danger"></i>
-                                        <strong>주소:</strong> {{ parkinglot.parkinglot_add }}
+                                        <strong>주소:</strong> 울산광역시 동구 일산동 901
                                     </small>
                                 </p>
                             </div>
@@ -577,7 +604,7 @@
             const cancelBtn = btnGroup.querySelector('button.btn-danger');
             if (cancelBtn) {
                 // 취소 버튼을 재예약 버튼으로 교체
-                const parkinglotId = '{{ parkinglot.parkinglot_id }}';
+                const parkinglotId = '10039';
                 const newBtn = document.createElement('a');
                 newBtn.href = `/map?parkinglot_id=${parkinglotId}`;
                 newBtn.className = 'btn btn-success';
@@ -661,7 +688,7 @@
             const reactivateBtn = btnGroup.querySelector('button.btn-success');
             if (reactivateBtn) {
                 // 재예약 버튼을 취소 버튼으로 교체
-                const reservationId = '{{ reservation.reservation_id }}';
+                const reservationId = '1';
                 const newBtn = document.createElement('button');
                 newBtn.onclick = function() { confirmDeletion(reservationId); };
                 newBtn.className = 'btn btn-danger';
@@ -693,4 +720,22 @@
 </script>
 </body>
 </html>
-{% endblock %}
+
+    </div>
+
+    <!-- 푸터 -->
+    <footer>
+        <div class="container">
+            <p class="mb-0">&copy; 2025 Zoochacha | 주차 예약 시스템</p>
+            <p>문의: support@zoochacha.com</p>
+            <div>
+                <a href="#" class="me-3">Instagram</a>
+                <a href="#" class="me-3">Facebook</a>
+                <a href="#" class="me-3">Youtube</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

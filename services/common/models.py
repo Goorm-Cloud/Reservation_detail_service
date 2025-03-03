@@ -48,6 +48,7 @@ class Reservation(db.Model):
     parkinglot_id = db.Column(db.Integer, db.ForeignKey("parkinglot.parkinglot_id"), nullable=False) 
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), nullable=False) 
     reservation_status = db.Column(db.Enum("confirm", "none", "cancel", name="modified_type_enum"), nullable=True)
+    is_deleted = db.Column(db.Boolean, default=False, nullable=False)
     
     created_at = db.Column(db.DateTime, nullable=True)
     created_by = db.Column(db.String(16), nullable=True) 

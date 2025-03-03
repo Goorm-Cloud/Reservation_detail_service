@@ -12,11 +12,462 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ url_for('static', filename='js/map_script.js') }}" defer></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .container {
+            max-width: 800px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-weight: bold;
+            color: #343a40;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, #6c757d, #0d6efd, #6c757d);
+        }
+        .table {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 12px 15px;
+        }
+        .table th {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .table td {
+            font-size: 15px;
+        }
+        .section-header {
+            background-color: #343a40;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px 5px 0 0;
+            margin-top: 20px;
+            margin-bottom: 0;
+        }
+        .user-info {
+            background-color: #d1e7dd;
+            transition: background-color 0.3s;
+        }
+        .user-info:hover {
+            background-color: #c3dfd6;
+        }
+        .parkinglot-info {
+            background-color: #cfe2ff;
+            transition: background-color 0.3s;
+        }
+        .parkinglot-info:hover {
+            background-color: #bddbff;
+        }
+        .reservation-info {
+            background-color: #f8d7da;
+            transition: background-color 0.3s;
+        }
+        .reservation-info:hover {
+            background-color: #f5c2c7;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .status-confirm {
+            background-color: #198754;
+            color: white;
+        }
+        .status-none {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .status-cancel {
+            background-color: #dc3545;
+            color: white;
+        }
+        .info-icon {
+            margin-right: 8px;
+            width: 20px;
+            text-align: center;
+        }
+        .modal-content {
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            border-radius: 12px 12px 0 0;
+        }
+        .modal-title {
+            font-weight: bold;
+            color: #343a40;
+        }
+        #map {
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h2>예약 정보 상세보기</h2>
+    
+    <!-- 사용자 정보 섹션 -->
+    <h4 class="section-header"><i class="fas fa-user info-icon"></i>사용자 정보</h4>
+    <table class="table table-bordered table-hover bg-white mb-4">
+        <tbody>
+            {% if user.name %}
+            <tr class="user-info">
+                <td width="30%"><strong><i class="fas fa-id-card info-icon"></i>이름</strong></td>
+                <td>{{ user.name }}</td>
+            </tr>
+            {% endif %}
+            {% if user.email %}
+            <tr class="user-info">
+                <td><strong><i class="fas fa-envelope info-icon"></i>이메일</strong></td>
+                <td>{{ user.email }}</td>
+            </tr>
+            {% endif %}
+            {% if user.phone %}
+            <tr class="user-info">
+                <td><strong><i class="fas fa-phone info-icon"></i>연락처</strong></td>
+                <td>{{ user.phone }}</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    
+    <!-- 주차장 정보 섹션 -->
+    <h4 class="section-header"><i class="fas fa-parking info-icon"></i>주차장 정보</h4>
+    <table class="table table-bordered table-hover bg-white mb-4">
+        <tbody>
+            {% if parkinglot.parkinglot_name %}
+            <tr class="parkinglot-info">
+                <td width="30%"><strong><i class="fas fa-sign info-icon"></i>주차장 이름</strong></td>
+                <td>{{ parkinglot.parkinglot_name }}</td>
+            </tr>
+            {% endif %}
+            {% if parkinglot.parkinglot_add %}
+            <tr class="parkinglot-info">
+                <td><strong><i class="fas fa-map-marker-alt info-icon"></i>주소</strong></td>
+                <td>{{ parkinglot.parkinglot_add }}</td>
+            </tr>
+            {% endif %}
+            {% if parkinglot.parkinglot_type %}
+            <tr class="parkinglot-info">
+                <td><strong><i class="fas fa-car info-icon"></i>주차장 유형</strong></td>
+                <td>
+                    {% if parkinglot.parkinglot_type == 'indoor' %}
+                        실내 주차장
+                    {% elif parkinglot.parkinglot_type == 'outdoor' %}
+                        노외 주차장
+                    {% elif parkinglot.parkinglot_type == 'attached' %}
+                        부설 주차장
+                    {% else %}
+                        {{ parkinglot.parkinglot_type }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endif %}
+            {% if parkinglot.parkinglot_day %}
+            <tr class="parkinglot-info">
+                <td><strong><i class="fas fa-calendar-day info-icon"></i>운영 요일</strong></td>
+                <td>
+                    {% if parkinglot.parkinglot_day == 'mon' %}
+                        월요일
+                    {% elif parkinglot.parkinglot_day == 'tue' %}
+                        화요일
+                    {% elif parkinglot.parkinglot_day == 'wed' %}
+                        수요일
+                    {% elif parkinglot.parkinglot_day == 'thu' %}
+                        목요일
+                    {% elif parkinglot.parkinglot_day == 'fri' %}
+                        금요일
+                    {% elif parkinglot.parkinglot_day == 'sat' %}
+                        토요일
+                    {% elif parkinglot.parkinglot_day == 'sun' %}
+                        일요일
+                    {% else %}
+                        {{ parkinglot.parkinglot_day }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endif %}
+            {% if parkinglot.parkinglot_time %}
+            <tr class="parkinglot-info">
+                <td><strong><i class="fas fa-clock info-icon"></i>운영 시간</strong></td>
+                <td>{{ parkinglot.parkinglot_time }}</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    
+    <!-- 예약 정보 섹션 -->
+    <h4 class="section-header"><i class="fas fa-calendar-check info-icon"></i>예약 정보</h4>
+    <table class="table table-bordered table-hover bg-white mb-4">
+        <tbody>
+            {% if reservation.reservation_status %}
+            <tr class="reservation-info">
+                <td width="30%"><strong><i class="fas fa-info-circle info-icon"></i>예약 상태</strong></td>
+                <td>
+                    {% if reservation.reservation_status == 'confirm' %}
+                        <span class="status-badge status-confirm">
+                            <i class="fas fa-check-circle"></i> 확정
+                        </span>
+                    {% elif reservation.reservation_status == 'none' %}
+                        <span class="status-badge status-none">
+                            <i class="fas fa-clock"></i> 대기중
+                        </span>
+                    {% elif reservation.reservation_status == 'cancel' %}
+                        <span class="status-badge status-cancel">
+                            <i class="fas fa-times-circle"></i> 취소됨
+                        </span>
+                    {% else %}
+                        {{ reservation.reservation_status }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endif %}
+            {% if reservation.created_at %}
+            <tr class="reservation-info">
+                <td><strong><i class="fas fa-calendar-plus info-icon"></i>생성 일시</strong></td>
+                <td>{{ reservation.created_at.strftime('%Y년 %m월 %d일 %H시 %M분') }}</td>
+            </tr>
+            {% endif %}
+            {% if reservation.modified_at %}
+            <tr class="reservation-info">
+                <td><strong><i class="fas fa-edit info-icon"></i>수정 일시</strong></td>
+                <td>{{ reservation.modified_at.strftime('%Y년 %m월 %d일 %H시 %M분') }}</td>
+            </tr>
+            {% endif %}
+            {% if reservation.created_by %}
+            <tr class="reservation-info">
+                <td><strong><i class="fas fa-user-plus info-icon"></i>생성자</strong></td>
+                <td>{{ reservation.created_by }}</td>
+            </tr>
+            {% endif %}
+            {% if reservation.modified_by %}
+            <tr class="reservation-info">
+                <td><strong><i class="fas fa-user-edit info-icon"></i>수정자</strong></td>
+                <td>{{ reservation.modified_by }}</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
 
+    <div class="btn-group">
+        <a href="/map" class="btn btn-secondary">
+            <i class="fas fa-home"></i> 홈으로
+        </a>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editReservationModal">
+            <i class="fas fa-edit"></i> 예약 수정
+        </button>
+        <button onclick="confirmDeletion('{{ reservation.reservation_id }}')" class="btn btn-danger">
+            <i class="fas fa-trash-alt"></i> 예약 삭제
+        </button>
+    </div>
+</div>
 
+<!-- 예약 수정 모달 -->
+<div class="modal fade" id="editReservationModal" tabindex="-1" aria-labelledby="editReservationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editReservationModalLabel">
+                    <i class="fas fa-edit"></i> 예약 수정
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <form id="editReservationForm" action="{{ url_for('reservation_detail_bp.modify', reservation_id=reservation.reservation_id) }}" method="POST">
+                            <!-- CSRF 토큰 제거 -->
+                            
+                            <!-- 예약 상태 (숨김 필드로 변경) -->
+                            <input type="hidden" name="reservation_status" value="{{ reservation.reservation_status }}">
+                            
+                            <div class="mb-3">
+                                <label for="reservation_status_display" class="form-label">
+                                    <i class="fas fa-info-circle"></i> 예약 상태 (수정 불가)
+                                </label>
+                                <select class="form-select" id="reservation_status_display" disabled>
+                                    <option value="confirm" {% if reservation.reservation_status == 'confirm' %}selected{% endif %}>
+                                        ✅ 확정
+                                    </option>
+                                    <option value="none" {% if reservation.reservation_status == 'none' %}selected{% endif %}>
+                                        ⏱️ 대기
+                                    </option>
+                                    <option value="cancel" {% if reservation.reservation_status == 'cancel' %}selected{% endif %}>
+                                        ❌ 취소
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <!-- 사용자 이름 (숨김 필드로 변경) -->
+                            <input type="hidden" name="user_name" value="{{ user.name }}">
+                            
+                            <div class="mb-3">
+                                <label for="user_name_display" class="form-label">
+                                    <i class="fas fa-user"></i> 사용자 이름 (수정 불가)
+                                </label>
+                                <input type="text" class="form-control" id="user_name_display" value="{{ user.name }}" disabled>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="user_email" class="form-label">
+                                    <i class="fas fa-envelope"></i> 이메일
+                                </label>
+                                <input type="email" class="form-control" id="user_email" name="user_email" value="{{ user.email }}">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="user_phone" class="form-label">
+                                    <i class="fas fa-phone"></i> 연락처
+                                </label>
+                                <input type="text" class="form-control" id="user_phone" name="user_phone" value="{{ user.phone }}">
+                            </div>
 
+                            <!-- 수정자와 수정 시간은 숨김 처리 -->
+                            <input type="hidden" id="modified_by" name="modified_by" value="관리자">
+                            <input type="hidden" id="modified_at" name="modified_at">
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fas fa-times"></i> 취소
+                                </button>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-save"></i> 수정 완료
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <i class="fas fa-info-circle"></i> 안내
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <small>
+                                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                                        예약 상태와 사용자 이름은 수정할 수 없습니다.
+                                    </small>
+                                </p>
+                                <p class="card-text">
+                                    <small>
+                                        <i class="fas fa-check-circle text-success"></i>
+                                        이메일과 연락처만 수정 가능합니다.
+                                    </small>
+                                </p>
+                                <p class="card-text">
+                                    <small>
+                                        <i class="fas fa-parking text-primary"></i>
+                                        <strong>주차장:</strong> {{ parkinglot.parkinglot_name }}
+                                    </small>
+                                </p>
+                                <p class="card-text">
+                                    <small>
+                                        <i class="fas fa-map-marker-alt text-danger"></i>
+                                        <strong>주소:</strong> {{ parkinglot.parkinglot_add }}
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- 폼 제출 전 현재 시간 설정 -->
+<script>
+    document.getElementById("editReservationForm").addEventListener("submit", function(event) {
+        // 현재 시간을 자동으로 설정
+        document.getElementById("modified_at").value = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        console.log("폼 제출 - 수정 시간:", document.getElementById("modified_at").value);
+        
+        // 폼 제출 확인
+        if (!confirm('예약 정보를 수정하시겠습니까?')) {
+            event.preventDefault();
+        }
+    });
+</script>
+
+<script>
+    function confirmDeletion(reservationId) {
+        if (confirm('정말 삭제하시겠습니까?')) {
+            fetch(`/reservation-detail/${reservationId}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' }
+            }).then(response => {
+                if (response.ok) {
+                    alert('예약이 삭제되었습니다.');
+                    window.location.href = '/map';
+                } else {
+                    alert('삭제에 실패했습니다.');
+                }
+            });
+        }
+    }
+</script>
 </body>
 </html>
 {% endblock %}

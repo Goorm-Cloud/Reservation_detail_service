@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, url_for, redirect
+from flask import Flask, url_for
 from services.common.models import db, migrate
 from services.common.oauth import oauth
 
@@ -16,6 +16,8 @@ def create_app():
     app.config.from_pyfile('config.py')
     app.secret_key = os.urandom(24)
 
+
+
     # 📌 OAuth 설정
     oauth.init_app(app)
     oauth.register(
@@ -27,13 +29,21 @@ def create_app():
         client_kwargs={'scope': 'phone openid email'}
     )
 
+
+
     # 📌 KAKAO API KEY 로드
     if not os.getenv("KAKAO_API_KEY"):
         raise ValueError("❌ KAKAO_API_KEY가 설정되지 않았습니다! .env 파일을 확인하세요.")
     app.config['TEMPLATES_AUTO_RELOAD'] = True
+
+
+
     # 📌 DB 설정
     db.init_app(app)
     migrate.init_app(app, db)
+
+
+
 
     @app.route("/")
     def index():
@@ -47,5 +57,6 @@ def create_app():
     app.register_blueprint(reservation_bp, url_prefix=app.config['RESERVATION_SERVICE_URL'])
     app.register_blueprint(parkinglot_bp, url_prefix=app.config['PARKINGLOT_SERVICE_URL'])
     app.register_blueprint(reservation_detail_bp, url_prefix=app.config['RESERVATION_DETAIL_SERVICE_URL'])
+
 
     return app

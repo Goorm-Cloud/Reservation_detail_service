@@ -1,9 +1,10 @@
 import os
 import json
-from flask import render_template, request, Response, send_from_directory, jsonify
+from flask import url_for, render_template, redirect, request, Response, send_from_directory, jsonify
 from services.common.models import db, Reservation, ParkingLot, User
 from datetime import datetime
 from services.reservation_service.reservation_form import ReservationForm
+from flask import flash
 
 
 # 📌 정적 파일 제공
@@ -36,20 +37,24 @@ def reserve_parking(parkinglot_id):
         user = db.session.query(User).filter_by(email=email).first()
 
         if not user:
-            return jsonify({"success": False, "message": "❌ 등록되지 않은 사용자입니다. 이메일을 확인하세요."})
+            flash("❌ 등록되지 않은 사용자입니다. 이메일을 확인하세요.", "danger")
+            return render_template('reserve_parking.html', parking_lot=parking_lot, form=form)
 
         # 🚀 예약 생성
         new_reservation = Reservation(
             user_id=user.user_id,
             parkinglot_id=parkinglot_id,
             reservation_status="confirm",
+            created_at=datetime.utcnow(),
+            created_by=str(user.name),
             modified_at=datetime.utcnow(),
-            modified_by=str(user.user_id)
+            modified_by=str(user.name)
         )
 
         db.session.add(new_reservation)
         db.session.commit()
 
-        return jsonify({"success": True, "message": "✅ 예약이 완료되었습니다!"})
+        # 예약 상세 페이지로 리다이렉트
+        return redirect(url_for('reservation_detail_bp.detail', reservation_id=new_reservation.reservation_id))
 
     return render_template('reserve_parking.html', parking_lot=parking_lot, form=form)

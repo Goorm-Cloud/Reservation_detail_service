@@ -3,6 +3,8 @@ import json
 import sqlite3
 import pandas as pd
 from flask import render_template, send_from_directory, jsonify, current_app
+from dotenv import dotenv_values
+
 
 # 📌 주차장 데이터 불러오기 함수 (DB 사용)
 def load_parking_data():
@@ -49,10 +51,14 @@ def load_parking_data():
         print(f"❌ DB 데이터 로드 중 오류 발생: {e}")
         return []
 
+dotenv_path = ".env"
+if os.path.exists(dotenv_path):
+    env_vars = dotenv_values(dotenv_path)  # .env 파일 값 불러오기
+    os.environ.update(env_vars)  # 환경 변수 강제
 # 📌 홈 페이지 렌더링
 def home_view():
     print("✅ home_view호출")
-    kakao_api_key = os.getenv("KAKAO_API_KEY")
+    kakao_api_key = os.getenv("KAKAO_API_KEY")  
     return render_template("index.html", kakao_api_key=kakao_api_key)
 
 # 📌 정적 파일 제공

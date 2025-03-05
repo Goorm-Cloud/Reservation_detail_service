@@ -13,7 +13,6 @@ def create_app():
     app.secret_key = os.urandom(24)
 
 
-
     # 📌 OAuth 설정
     oauth.init_app(app)
     oauth.register(
@@ -26,17 +25,13 @@ def create_app():
     )
 
 
-
     # 📌 템플릿 자동 리로드 설정
     app.config['TEMPLATES_AUTO_RELOAD'] = True
-
 
 
     # 📌 DB 설정
     db.init_app(app)
     migrate.init_app(app, db)
-
-
 
 
     @app.route("/")

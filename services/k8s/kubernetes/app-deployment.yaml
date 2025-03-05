@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zochacha-reservation-detail
+  labels:
+    app: zochacha
+    tier: frontend
+spec:
+  ports:
+  - port: 5004
+    targetPort: 5004
+    name: http
+  selector:
+    app: zochacha
+    tier: frontend
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zochacha-reservation-detail
+  labels:
+    app: zochacha
+    tier: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: zochacha
+      tier: frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: zochacha
+        tier: frontend
+    spec:
+      containers:
+      - name: zochacha-reservation-detail
+        image: zoaba86/zochacha_reservation_detail:v1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5004
+          name: http
+        env:
+        - name: DB_MODE
+          value: mysql
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: zochacha-secrets
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: zochacha-secrets
+              key: MYSQL_PASSWORD
+        - name: MYSQL_HOST
+          value: mysql
+        - name: MYSQL_PORT
+          value: "3306"
+        - name: MYSQL_DB
+          valueFrom:
+            secretKeyRef:
+              name: zochacha-secrets
+              key: MYSQL_DATABASE
+        - name: CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: zochacha-secrets
+              key: CLIENT_SECRET
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "300m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5004
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5004
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: config-volume
+        projected:
+          sources:
+          - configMap:
+              name: zochacha-config
+              items:
+              - key: config.py
+                path: config.py
+          - secret:
+              name: zochacha-secrets
+              items:
+              - key: .env
+                path: .env 

@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: zorba86/zochacha_mysql:v1.0.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: zochacha
+      MYSQL_USER: zochacha
+      MYSQL_PASSWORD: zochacha
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    image: zorba86/zochacha-server:v1.0.1
+    environment:
+      PYTHONPATH: /app
+      DB_TYPE: mysql
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: zochacha
+      MYSQL_PASSWORD: zochacha
+      MYSQL_DATABASE: zochacha
+    volumes:
+      - ./.env:/app/.env:ro
+      - ./config.py:/app/config.py:ro
+    ports:
+      - "5004:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy 

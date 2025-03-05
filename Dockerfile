@@ -1,23 +1,29 @@
-FROM python:3.13  
+# 기본 이미지로 Python 3.13 사용
+FROM python:3.13-slim
+
+# 작업 디렉토리 설정
 WORKDIR /app
 
-# pandas 등 일부 패키지 빌드를 위한 필수 패키지 설치
-RUN apt-get update && apt-get install -y \
-    build-essential \
+# 시스템 패키지 설치
+RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
-    g++ \
-    libffi-dev \
-    libssl-dev \
-    libpq-dev \
-    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# pip 최신화 후 requirements 설치
-COPY requirements.txt requirements.txt
-RUN pip install --upgrade pip setuptools wheel && pip install --no-cache-dir -r requirements.txt
+# 필요한 Python 패키지 설치
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# 앱 코드 복사
+# 애플리케이션 코드 복사
 COPY . .
 
-CMD ["gunicorn", "--bind", "0:5002", "app:create_app()"]
+# 환경 변수 설정
+ENV FLASK_APP=app.py
+ENV FLASK_ENV=production
+ENV PYTHONPATH=/app
+
+# 포트 설정
+EXPOSE 5000
+
+# 실행 명령
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:create_app()"]
 

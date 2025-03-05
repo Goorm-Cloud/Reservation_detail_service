@@ -1,4 +1,55 @@
+# Git
+.git
+.gitignore
+
+# 캐시 파일
 __pycache__/
-*.pyc
-*.pyo
-.env
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 가상 환경
+venv/
+env/
+ENV/
+
+# IDE 설정
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 로그 파일
+*.log
+
+# 임시 파일
+*.tmp
+*.bak
+*.swp
+*.html
+response*.html
+
+# 도커 관련 파일
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# 쿠버네티스 관련 파일
+services/k8s/
+
+# 기타 불필요한 파일
+.DS_Store
+node_modules/
+dist/
+.trunk/
+
+# Python 관련
+*.so
+.Python
+
+# 데이터베이스 관련
+zoochacha_mysql/
+*.db
+services/common/parking.db

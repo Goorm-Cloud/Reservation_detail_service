@@ -1,0 +1,11 @@
+# 데이터베이스 설정
+DB_MODE=mysql
+MYSQL_USER=zochacha
+MYSQL_PASSWORD=password
+MYSQL_HOST=mysql
+MYSQL_PORT=3306
+MYSQL_DB=zochacha
+
+# OAuth Cognito 관련 설정
+CLIENT_SECRET=14nq6ak7c4eajkhc9ghhokg8pvks3jhdrl7hae90p48hkvtjfqob
+AUTHORIZE_REDIRECT_URL=http://localhost:5000/authorize 
